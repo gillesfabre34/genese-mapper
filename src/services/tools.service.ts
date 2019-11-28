@@ -1,7 +1,4 @@
-import { Injectable } from '@angular/core';
 
-// @dynamic
-@Injectable()
 export class Tools {
 
     // --------------------------------------------------
@@ -48,15 +45,6 @@ export class Tools {
             || typeof target === 'number'
             || typeof target === 'boolean';
     }
-
-
-    /**
-     * Returns a value by default if value to check doesn't exists
-     */
-    static default(valueToCheck, valueByDefault): any {
-        return valueToCheck ? valueToCheck : valueByDefault;
-    }
-
 
     /**
      * Check if two objects have the same values for every key

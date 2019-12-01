@@ -10,6 +10,9 @@ export class TestString {
 export class TestBoolean {
     a ?= true;
 }
+export class TestUndefined {
+    a ?= undefined;
+}
 
 fdescribe('GENESE MAPPER geneseMapper', () => {
 
@@ -19,7 +22,7 @@ fdescribe('GENESE MAPPER geneseMapper', () => {
     // **************************************************************************
 
 
-    // console.log('geneseM apper.map({a: 1})', JSON.stringify(geneseMapper.map({a: 1})));
+    // console.log('geneseMapper.map({a: 1})', JSON.stringify(geneseMapper.map({a: 1})));
 
     describe('PRIMITIVES', () => {
 
@@ -81,6 +84,7 @@ fdescribe('GENESE MAPPER geneseMapper', () => {
         describe('booleans', () => {
 
             const geneseMapper = new GeneseMapper(TestBoolean);
+
             it('{a: "1"} => {a: true}', () => {
                 expect(isSameObject(geneseMapper.map({a: '1'}), {a: true})).toBeTruthy();
             });
@@ -106,5 +110,18 @@ fdescribe('GENESE MAPPER geneseMapper', () => {
         });
 
     });
+
+    describe('UNDEFINED', () => {
+
+        const geneseMapper = new GeneseMapper(TestUndefined);
+
+        it('{a: 1} => {a: 1}', () => {
+            expect(isSameObject(geneseMapper.map({a: 1}), {a: 1})).toBeTruthy();
+        });
+        it('{a: {b: 2}} => {a: {b: 2}}', () => {
+            expect(isSameObject(geneseMapper.map({a: {b: 2}}), {a: {b: 2}})).toBeTruthy();
+        });
+    });
+
 
 });

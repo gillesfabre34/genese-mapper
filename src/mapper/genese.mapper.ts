@@ -66,24 +66,6 @@ export class GeneseMapper<T> {
 
 
     /**
-     * If a property of the U class have the decorator @GnRename, this methodName replaces the key of the gnRename http param
-     * This methodName is useful when the backend renamed some DTO properties :
-     * with @GnRename decorator, you can get values from backend without changing the property name of your T objects in every file
-     */
-    _rename<U>(uConstructor: TConstructor<U>, data: any): any {
-        const constr: any = uConstructor;
-        Object.keys(constr.gnRename).map(oldKey => {
-            const newKey = constr.gnRename[oldKey];
-            if (data[newKey]) {
-                data[oldKey] = data[newKey];
-                delete data[newKey];
-            }
-        });
-        return data;
-    }
-
-
-    /**
      * For a given object with U type (the target model), returns the source object mapped with the U model
      * If source === null, it returns null
      * CAUTION: param "target" can't be undefined
@@ -145,6 +127,8 @@ export class GeneseMapper<T> {
                             }
                         }
                     }
+                } else {
+                    return source;
                 }
             }
             return cloneTarget;
@@ -261,6 +245,25 @@ export class GeneseMapper<T> {
         }
         return arrayOfObjects;
     }
+
+
+    /**
+     * If a property of the U class have the decorator @GnRename, this methodName replaces the key of the gnRename http param
+     * This methodName is useful when the backend renamed some DTO properties :
+     * with @GnRename decorator, you can get values from backend without changing the property name of your T objects in every file
+     */
+    _rename<U>(uConstructor: TConstructor<U>, data: any): any {
+        const constr: any = uConstructor;
+        Object.keys(constr.gnRename).map(oldKey => {
+            const newKey = constr.gnRename[oldKey];
+            if (data[newKey]) {
+                data[oldKey] = data[newKey];
+                delete data[newKey];
+            }
+        });
+        return data;
+    }
+
 
 
     /**

@@ -65,6 +65,45 @@ export class GeneseMapper<T> {
     }
 
 
+    // --------------------------------------------------
+    //                 INTERNAL METHODS
+    // --------------------------------------------------
+
+
+    /**
+     * Check if two objects are both string or number.
+     * In this case, returns true.
+     */
+    _areStringOrNumber(target: any, source: any): boolean {
+        return ((typeof target === 'string' || typeof target === 'number') && (typeof source === 'number' || typeof source === 'string'));
+    }
+
+
+    /**
+     * If source and target are both string or number, we cast source into the target's type and returns it.
+     * This methodName adds a tolerance for http requests which returns numbers instead of strings and inversely
+     * Caution : params target and source should not be falsy values
+     */
+    _castStringAndNumbers(target: any, source: any): any {
+        if ((typeof target !== 'string' && typeof target !== 'number') || source === undefined) {
+            console.warn('Genese _castStringAndNumbers : source or target undefined');
+            return undefined;
+        } else if (source === null) {
+            return null;
+        } else if (typeof target === 'string' && (typeof source === 'number' || typeof source === 'string')) {
+            return  source.toString();
+        } else if (typeof target === 'number' && typeof source === 'number') {
+            return source;
+        } else if (typeof target === 'number' && typeof source === 'string') {
+            console.log('%c source', 'font-weight: bold; color: blue;', source);
+            console.log('%c +source', 'font-weight: bold; color: blue;', +source);
+            return isNaN(Number(source)) ? target : +source;
+        } else {
+            console.warn('Genese _castStringAndNumbers : impossible to cast this elements');
+            return undefined;
+        }
+    }
+
     /**
      * For a given object with U type (the target model), returns the source object mapped with the U model
      * If source === null, it returns null
@@ -176,16 +215,6 @@ export class GeneseMapper<T> {
     }
 
 
-
-    private _mapIndexableTypeObject(target: any, source: any): any {
-        const mappedObject = {};
-        for (const key of Object.keys(source)) {
-            Object.assign(mappedObject, { [key]: this._diveMap(target, source[key])});
-        }
-        return mappedObject;
-    }
-
-
     private _mapIndexableTypeArray(target: any[], source: any): any {
         const mappedObject: any = {};
         for (const key of Object.keys(source)) {
@@ -197,36 +226,13 @@ export class GeneseMapper<T> {
     }
 
 
-    /**
-     * Check if two objects are both string or number.
-     * In this case, returns true.
-     */
-    _areStringOrNumber(target: any, source: any): boolean {
-        return ((typeof target === 'string' || typeof target === 'number') && (typeof source === 'number' || typeof source === 'string'));
-    }
 
-
-    /**
-     * If source and target are both string or number, we cast source into the target's type and returns it.
-     * This methodName adds a tolerance for http requests which returns numbers instead of strings and inversely
-     * Caution : params target and source should not be falsy values
-     */
-    _castStringAndNumbers(target: any, source: any): any {
-        if ((typeof target !== 'string' && typeof target !== 'number') || source === undefined) {
-            console.warn('Genese _castStringAndNumbers : source or target undefined');
-            return undefined;
-        } else if (source === null) {
-            return null;
-        } else if (typeof target === 'string' && (typeof source === 'number' || typeof source === 'string')) {
-            return  source.toString();
-        } else if (typeof target === 'number' && (typeof source === 'number' || typeof source === 'string')) {
-            return +source;
-            // } else if (isSameObject(target, source)) {
-            //     return source;
-        } else {
-            console.warn('Genese _castStringAndNumbers : impossible to cast this elements');
-            return undefined;
+    private _mapIndexableTypeObject(target: any, source: any): any {
+        const mappedObject = {};
+        for (const key of Object.keys(source)) {
+            Object.assign(mappedObject, { [key]: this._diveMap(target, source[key])});
         }
+        return mappedObject;
     }
 
 

@@ -1,5 +1,5 @@
 import { GeneseMapper } from '..';
-import { Tools } from '../services/tools.service';
+import { isSameObject } from '../services/tools.service';
 
 export class TestNumber {
     a ?= 0;
@@ -26,19 +26,19 @@ fdescribe('GENESE MAPPER geneseMapper', () => {
 
             console.log('gmp.map({a: 1})', JSON.stringify(gmp.map({a: 1})));
             console.log('gmp.map(true)', JSON.stringify(gmp.map(true)));
-            console.log('Tools.isSameObject(gmp.map(true), \'aaa\'))', Tools.isSameObject({a: 0}, 'aaa'));
+            console.log('isSameObject(gmp.map(true), \'aaa\'))', isSameObject({a: 0}, 'aaa'));
             // it('{a: 1} => {a: 1}', () => {
-            //     expect(Tools.isSameObject(gmp.map({a: 1}), {a: 1})).toBeTruthy();
+            //     expect(isSameObject(gmp.map({a: 1}), {a: 1})).toBeTruthy();
             // });
             //
             // it('{a: "1"} => {a: 1}', () => {
-            //     expect(Tools.isSameObject(gmp.map({a: '1'}), {a: 1})).toBeTruthy();
+            //     expect(isSameObject(gmp.map({a: '1'}), {a: 1})).toBeTruthy();
             // });
             // it('true => aaa', () => {
-            //     expect(Tools.isSameObject(gmp.map(true), 'aaa')).toBeTruthy();
+            //     expect(isSameObject(gmp.map(true), 'aaa')).toBeTruthy();
             // });
             // it('aaa => aaa', () => {
-            //     expect(Tools.isSameObject(gmp.map('aaa'), 'bbb')).toBeTruthy();
+            //     expect(isSameObject(gmp.map('aaa'), 'bbb')).toBeTruthy();
             // });
 
         });

@@ -1,7 +1,6 @@
-import { Tools } from '../services/tools.service';
 import { TConstructor } from '../models/t-constructor.model';
 import { PRIMITIVES } from '../models/primitive.model';
-import { ExtractService } from '../services/extract.service';
+import { clone, isPrimitive } from '../services/tools.service';
 
 export class GeneseMapper<T> {
 
@@ -95,8 +94,8 @@ export class GeneseMapper<T> {
         } else if (source === null) {
             return source;
         } else {
-            if (Tools.isPrimitive(target)) {
-                if (Tools.isPrimitive(source)) {
+            if (isPrimitive(target)) {
+                if (isPrimitive(source)) {
                     if (this._areStringOrNumber(target, source)) {
                         return this._castStringAndNumbers(target, source);
                     } else {
@@ -238,7 +237,7 @@ export class GeneseMapper<T> {
             return  source.toString();
         } else if (typeof target === 'number' && (typeof source === 'number' || typeof source === 'string')) {
             return +source;
-            // } else if (Tools.isSameObject(target, source)) {
+            // } else if (isSameObject(target, source)) {
             //     return source;
         } else {
             console.warn('Genese _castStringAndNumbers : impossible to cast this elements');
@@ -256,7 +255,7 @@ export class GeneseMapper<T> {
             return undefined;
         }
         const arrayOfObjects: any[] = [];
-        const model = Tools.clone(target[0]);
+        const model = clone(target[0]);
         for (const element of source) {
             arrayOfObjects.push(this._diveMap(model, element));
         }
@@ -289,15 +288,15 @@ export class GeneseMapper<T> {
             console.error('No data or no language : impossible to translate element');
             return undefined;
         } else {
-            const result = Tools.clone(data);
+            const result = clone(data);
             Object.keys(result).map(key => {
                 if (key === 'gnTranslate') {
                     Object.assign(result, result.gnTranslate[language]);
                     delete result.gnTranslate;
                 } else {
                     if (typeof result[key] === 'object') {
-                        const clone = Tools.clone(result[key]);
-                        result[key] = this.translate(clone, language);
+                        const copy = clone(result[key]);
+                        result[key] = this.translate(copy, language);
                     }
                 }
             });

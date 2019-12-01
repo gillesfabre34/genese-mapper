@@ -1,6 +1,6 @@
-import { Tools } from './services/tools.service';
 import * as chalk from 'chalk';
+import { isSameObject } from './services/tools.service';
 
-const zzz = Tools.isSameObject({a: 0}, 'aaa');
+const zzz = isSameObject({a: 0}, 'aaa');
 
 console.log(chalk.yellow('zzz', zzz));

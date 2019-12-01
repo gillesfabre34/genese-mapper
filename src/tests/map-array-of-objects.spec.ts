@@ -1,5 +1,5 @@
 import { GeneseMapper } from '../mapper/genese.mapper';
-import { Tools } from '../services/tools.service';
+import { isSameObject } from '../services/tools.service';
 
 describe('GENESE MAPPER _mapArrayOfObjects', () => {
     const gmp = new GeneseMapper(Object);
@@ -24,11 +24,11 @@ describe('GENESE MAPPER _mapArrayOfObjects', () => {
     });
 
     it('[{a: 1}], [{a: 1}] => [{a: 1}]', () => {
-        expect(Tools.isSameObject(gmp._mapArrayOfObjects([{a: 1}], [{a: 1}]), [{a: 1}])).toBeTruthy();
+        expect(isSameObject(gmp._mapArrayOfObjects([{a: 1}], [{a: 1}]), [{a: 1}])).toBeTruthy();
     });
 
     it('[{a: 1}], [{a: 1}] => [{a: 1}]', () => {
-        expect(Tools.isSameObject(gmp._mapArrayOfObjects([{a: 1}], [{a: 1}]), [{a: 1}])).toBeTruthy();
+        expect(isSameObject(gmp._mapArrayOfObjects([{a: 1}], [{a: 1}]), [{a: 1}])).toBeTruthy();
     });
 
 });

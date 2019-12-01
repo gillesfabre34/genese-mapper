@@ -1,5 +1,4 @@
 import { GeneseMapper } from '../mapper/genese.mapper';
-import { Tools } from '../services/tools.service';
 
 describe('GENESE MAPPER FACTORY', () => {
     const gmp = new GeneseMapper(Object);

@@ -1,5 +1,5 @@
 import { GeneseMapper } from '..';
-import { Tools } from '../services/tools.service';
+import { isSameObject } from '../services/tools.service';
 
 describe('GENESE MAPPER _mapIndexableType', () => {
     const gmp = new GeneseMapper(Object);
@@ -23,7 +23,7 @@ describe('GENESE MAPPER _mapIndexableType', () => {
     });
 
     it('{gnIndexableType: {a: 1}}, undefined => {a: 1}', () => {
-        expect(Tools.isSameObject(gmp._mapIndexableType({a: 1}, undefined), {a: 1})).toBeTruthy();
+        expect(isSameObject(gmp._mapIndexableType({a: 1}, undefined), {a: 1})).toBeTruthy();
     });
 
     it('{a: 1}, null => null', () => {
@@ -31,7 +31,7 @@ describe('GENESE MAPPER _mapIndexableType', () => {
     });
 
     it('{country: ""}, countriesSource => {fr: {country: "Allemagne"}}', () => {
-        expect(Tools.isSameObject(gmp._mapIndexableType({country: ''}, countriesSource), countriesSource))
+        expect(isSameObject(gmp._mapIndexableType({country: ''}, countriesSource), countriesSource))
             .toBeTruthy();
     });
 

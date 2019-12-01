@@ -1,5 +1,5 @@
 import { GeneseMapper } from '..';
-import { Tools } from '../services/tools.service';
+import { isSameObject } from '../services/tools.service';
 
 describe('GENESE MAPPER _diveMap', () => {
     const gmp = new GeneseMapper(Object);
@@ -41,31 +41,31 @@ describe('GENESE MAPPER _diveMap', () => {
         });
 
         it('{a: 1}, undefined => {a: 1}', () => {
-            expect(Tools.isSameObject(gmp._diveMap({a: 1}, undefined), {a: 1})).toBeTruthy();
+            expect(isSameObject(gmp._diveMap({a: 1}, undefined), {a: 1})).toBeTruthy();
         });
 
         it('{a: 1}, {a: 1} => {a: 1}', () => {
-            expect(Tools.isSameObject(gmp._diveMap({a: 1}, {a: 1}), {a: 1})).toBeTruthy();
+            expect(isSameObject(gmp._diveMap({a: 1}, {a: 1}), {a: 1})).toBeTruthy();
         });
 
         it('{a: ""}, {a: "1"} => {a: "1"}', async () => {
-            expect(Tools.isSameObject(gmp._diveMap({a: ''}, {a: '1'}), {a: '1'})).toBeTruthy();
+            expect(isSameObject(gmp._diveMap({a: ''}, {a: '1'}), {a: '1'})).toBeTruthy();
         });
 
         it('{a: 1}, {} => {a: 1}', () => {
-            expect(Tools.isSameObject(gmp._diveMap({a: 1}, {}), {a: 1})).toBeTruthy();
+            expect(isSameObject(gmp._diveMap({a: 1}, {}), {a: 1})).toBeTruthy();
         });
 
         it('{a: 1}, {a: 2} => {a: 2}', () => {
-            expect(Tools.isSameObject(gmp._diveMap({a: 1}, {a: 2}), {a: 2})).toBeTruthy();
+            expect(isSameObject(gmp._diveMap({a: 1}, {a: 2}), {a: 2})).toBeTruthy();
         });
 
         it('{a: 1}, {a: null} => {a: null}', () => {
-            expect(Tools.isSameObject(gmp._diveMap({a: 1}, {a: null}), {a: null})).toBeTruthy();
+            expect(isSameObject(gmp._diveMap({a: 1}, {a: null}), {a: null})).toBeTruthy();
         });
 
         it('{country: ""}, {country: "Allemagne"} => {country: "Allemagne"}', () => {
-            expect(Tools.isSameObject(gmp._diveMap({country: ''}, {country: 'Allemagne'}), {country: 'Allemagne'})).toBeTruthy();
+            expect(isSameObject(gmp._diveMap({country: ''}, {country: 'Allemagne'}), {country: 'Allemagne'})).toBeTruthy();
         });
     });
 

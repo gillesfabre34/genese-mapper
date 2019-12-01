@@ -1,4 +1,4 @@
-import { Tools } from './tools.service';
+import { Tools } from '../services/tools.service';
 
 describe('TOOLS', () => {
 

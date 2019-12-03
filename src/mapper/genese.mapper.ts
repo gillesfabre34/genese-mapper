@@ -34,31 +34,43 @@ export class GeneseMapper<T> {
      * uConstructor is useful for extraction of given fields of a T class object
      */
     public map(data: any): T {
+        console.log('%c JSON.stringify(data)', JSON.stringify(data));
         const target = new this.tConstructor();
+        console.log('%c JSON.stringify(target)', JSON.stringify(target));
         if (!data) {
             return target;
         }
         if (this.tConstructor.hasOwnProperty('gnRename')) {
             data = this._rename(this.tConstructor, data);
         }
+        console.log('%c map this._diveMap(target, data)', this._diveMap<T>(target, data));
         return Object.assign(target, this._diveMap<T>(target, data));
     }
+
 
     /**
      * Returns array of mapped results
      */
-    mapGetAllResults<U = T>(data: any[], uConstructor?: TConstructor<U>): U[] {
-        const gConstructor = uConstructor ? uConstructor : this.tConstructor;
+    arrayMap(data: any[]): T[] {
+        if (!Array.isArray(data)) {
+            return [];
+        }
         const results: any[] = [];
-        if (PRIMITIVES.includes(gConstructor.name)) {
+        if (PRIMITIVES.includes(this.tConstructor.name)) {
             data.forEach(e => {
-                const newElement = typeof e === gConstructor.name.toLowerCase() ? e : undefined;
-                results.push(newElement);
+                if (typeof e === this.tConstructor.name.toLowerCase()) {
+                    results.push(e);
+                } else if (this.tConstructor.name === 'String' && typeof e === 'number') {
+                    results.push(e.toString());
+                } else if (this.tConstructor.name === 'Number' && typeof e === 'string' && !isNaN(Number(e))) {
+                    results.push(+e);
+                } else if (e === null) {
+                    results.push(null);
+                }
             });
         } else {
             data.forEach(e => {
                 results.push(this.map(e));
-                // results.push(uConstructor ? this.mapToObject<U>(e, uConstructor) : this.mapToObject<T>(e));
             });
         }
         return results;

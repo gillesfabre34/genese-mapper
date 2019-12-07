@@ -1,5 +1,5 @@
 # genese-mapper
-Generic mapper for Typescript apps
+Generic mapper of javascript objects in Typescript typed objects.
 
 ## Table of Contents
 * [Why use genese-mapper ?](#why-use-genese)
@@ -11,9 +11,9 @@ Generic mapper for Typescript apps
 
 ## Why use genese
 
-genese-mapper is the core module of the Genese framework. With genese-mapper, you can transform untyped javascript objects into typed objects. The most common use of genese-mapper is to transform json http responses into typed objects (typed with your own models). 
+genese-mapper is the core module of the ***Genese*** framework. With genese-mapper, you can transform untyped javascript objects into typed objects. The most common use of genese-mapper is to transform `json` http responses into typed objects (with your own models). 
 
-genese-mapper can be used alone if you just need to type some javascript objects, but is much more powerful inside other genese modules, like [genese-angular](https://www.npmjs.com/package/genese-angular), which will combine generic http data-services and generic mapper service. For example, with genese-angular, you can just remove all your long and fastidious mappers and data-services : one line in your components is enough !
+genese-mapper can be used alone if you just need to type some javascript objects, but is much more powerful inside other genese modules, like [genese-angular](https://www.npmjs.com/package/genese-angular), which is combining generic http data-services and generic mapper service. For example, with genese-angular, you can just remove all your long and fastidious data-services and mappers : one line in your components is enough !
 
 - Example 
 
@@ -41,9 +41,11 @@ export class BooksComponent {
 In this simple example, the line `this.booksGenese.getOne('/books', '1')` sends a GET request with the Angular `HttpClient` method, and returns an object of type `Book` (which is a model that you defined beforehand).
 
 But under the hood, genese-angular calls the genese-mapper module, which is the real generic mapper. 
-The genese-angular module just added genese-mapper as dependency.
+The genese-angular module simply added genese-mapper as dependency.
 
-That's why you wan use genese-mapper alone, or use it as a dependency of another module, like genese-angular.
+That's why you can use genese-mapper alone, or use it as a dependency of another module, like genese-angular.
+
+A complete demonstration of use of genese-mapper with genese-angular is available here : [genese-angular-demo](https://www.npmjs.com/package/genese-angular-demo).
 
 [Top](#table-of-contents)
 ## Installation
@@ -101,7 +103,7 @@ export class Book = {
 }
 ```
 
-[Top](#table-of-contents)
+[Top](#table-of-contents) -> [Models](#models)
 ### Indexable types
 
 Suppose that you wait http responses like this 
@@ -158,6 +160,7 @@ You'll need to use it every time you'll have to use indexable types.
 
 At first, define your model :
 
+`book.model.ts` 
 ```ts
 export class Book = {
     id ?= '';
@@ -186,7 +189,7 @@ Now, you're ready to use genese-mapper methods !
  
  ### map(data: any): T
  
- This method receives a javascript object without type, and returns a Typescript object with T type. T is the name of the class used to create your GeneseMapper: (`Book` in our case).
+ This method receives a javascript object without any type, and returns a Typescript object with T type. T is the name of the class used to create your GeneseMapper: (`Book` in our case).
  
  - Example
  
@@ -236,12 +239,14 @@ const book: Book = geneseMapper.map(data);
 
 ```
 
-As you can see, `book` is a Typescript object with type `Book`. genese-mapper looped on the properties of the `Book` class, and checked if data haves the same property names with the correct type, including in nested objects. Now, have a look in depth of the `.map` comportment.
+As you can see, `book` is a Typescript object with type `Book`. genese-mapper looped on the properties of the `Book` class, and checked if data have the same property names with the expected type, including in nested objects.
+
+***Note***
 
 - If some properties of data object are not in your model, like `price` or `editor.town`, they are simply removed.
 - If some properties of the class are not present in data object, the value by default is used, like for the `iSavailable` property.
 - Numbers are automatically casted in strings if necessary (like for `id` property), and inversely (if the string can be cast in number). 
-- When you set a default value to undefined in your model, genese accepts any kind of data for this property, like for `other` property.
+- When you set a default value to `undefined` in your model, genese accepts any kind of data for this property, like for `other` property.
 
 ### arrayMap(data: any[]): T[]
 

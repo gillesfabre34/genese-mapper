@@ -1,6 +1,6 @@
 import { TConstructor } from '../models/t-constructor.model';
 import { PRIMITIVES } from '../models/primitive.model';
-import { clone, isPrimitive } from '../services/tools.service';
+import { clone, isPrimitive } from '..';
 
 export class GeneseMapper<T> {
 
@@ -153,28 +153,35 @@ export class GeneseMapper<T> {
             let cloneTarget = Object.assign({}, target);
             for (const key of Object.keys(target)) {
                 if (key === 'gnIndexableType') {
-                    cloneTarget = this._mapIndexableType(target[key] as unknown as IndexableType, source);
-                }
-                if (target[key] !== undefined) {
-                    if (source[key] === null) {
-                        cloneTarget[key] = null;
-                    } else if (source[key] === undefined) {
-                        cloneTarget[key] = target[key];
-                    } else {
-                        if (Array.isArray(target[key])) {
-                            cloneTarget[key] = Array.isArray(source[key])
-                                ? this._mapArrayOfObjects(target[key], source[key])
-                                : cloneTarget[key];
+                    // console.log('%c _mapNotPrimitive target', 'font-weight: bold; color: orange;', target);
+                    // console.log('%c _mapNotPrimitive source', 'font-weight: bold; color: orange;', source);
+                    cloneTarget = this._mapIndexableType(target as unknown as IndexableType, source);
+                    // console.log('%c _mapNotPrimitive cloneTarget', 'font-weight: bold; color: black;', cloneTarget);
+                    // cloneTarget = this._mapIndexableType(target[key] as unknown as IndexableType, source);
+                } else {
+                    if (target[key] !== undefined) {
+                        console.log('%c _mapNotPrimitive key', 'font-weight: bold; color: red;', key);
+                        console.log('%c _mapNotPrimitive cloneTarget', 'font-weight: bold; color: red;', cloneTarget);
+                        if (source[key] === null) {
+                            cloneTarget[key] = null;
+                        } else if (source[key] === undefined) {
+                            cloneTarget[key] = target[key];
                         } else {
-                            if (this._areStringOrNumber(target[key], source[key])) {
-                                cloneTarget[key] = this._castStringAndNumbers(target[key], source[key]);
+                            if (Array.isArray(target[key])) {
+                                cloneTarget[key] = Array.isArray(source[key])
+                                    ? this._mapArrayOfObjects(target[key], source[key])
+                                    : cloneTarget[key];
                             } else {
-                                cloneTarget[key] = this._diveMap(target[key], source[key]);
+                                if (this._areStringOrNumber(target[key], source[key])) {
+                                    cloneTarget[key] = this._castStringAndNumbers(target[key], source[key]);
+                                } else {
+                                    cloneTarget[key] = this._diveMap(target[key], source[key]);
+                                }
                             }
                         }
+                    } else {
+                        return source;
                     }
-                } else {
-                    return source;
                 }
             }
             return cloneTarget;
@@ -206,7 +213,9 @@ export class GeneseMapper<T> {
      * Caution: param target should be defined
      */
     _mapIndexableType(target: any, source: any): any {
-        if (!target) {
+        // console.log('%c _mapIndexableType target', 'font-weight: bold; color: green;', target);
+        // console.log('%c _mapIndexableType source', 'font-weight: bold; color: green;', source);
+        if (target === undefined || target.gnIndexableType === undefined) {
             console.warn('Impossible to map indexable types with undefined target.');
             return undefined;
         }
@@ -216,9 +225,12 @@ export class GeneseMapper<T> {
         if (source === null) {
             return null;
         }
-        return Array.isArray(target) && target.length > 0
-            ? this._mapIndexableTypeArray(target[0], source)
-            : this._mapIndexableTypeObject(target, source);
+        const zzz = Object.assign({}, this._mapIndexableTypeObject(target.gnIndexableType, source));
+        console.log('%c _mapIndexableType zzz', 'font-weight: bold; color: fuchsia;', zzz);
+        // return zzz;
+        return Array.isArray(target.gnIndexableType) && target.gnIndexableType.length > 0
+            ? this._mapIndexableTypeArray(target.gnIndexableType[0], source)
+            : zzz;
     }
 
 
@@ -228,17 +240,19 @@ export class GeneseMapper<T> {
             const deepMapped = this._diveMap({[key]: [target]}, source);
             Object.assign(mappedObject, {[key]: deepMapped[key]});
         }
-        delete mappedObject.gnIndexableType;
         return mappedObject;
     }
 
 
 
     _mapIndexableTypeObject(target: any, source: any): any {
-        const mappedObject = {};
+        const mappedObject: any = {};
+        console.log('%c _mapIndexableTypeObject target', 'font-weight: bold; color: blue;', target);
+        console.log('%c _mapIndexableTypeObject source', 'font-weight: bold; color: blue;', source);
         for (const key of Object.keys(source)) {
             Object.assign(mappedObject, { [key]: this._diveMap(target, source[key])});
         }
+        console.log('%c _mapIndexableTypeObject mappedObject', 'font-weight: bold; color: blue;', mappedObject);
         return mappedObject;
     }
 

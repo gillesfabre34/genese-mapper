@@ -35,8 +35,6 @@ export function isPrimitive(target: any): boolean {
  * Check if two objects have the same values for every key
  */
 export function isSameObject(obj1: any, obj2: any): boolean {
-    console.log('%c IS_SAME_OBJECT obj1', obj1);
-    console.log('%c IS_SAME_OBJECT obj2', obj2);
     if (obj1 === obj2) {
         return true;
     }
@@ -63,37 +61,25 @@ export function isSameObject(obj1: any, obj2: any): boolean {
         return true;
     } else {
         for (const key of Object.keys(obj1)) {
-            console.log('%c IS_SAME_OBJECT key', key);
-            console.log('%c IS_SAME_OBJECT obj1', obj1);
-            console.log('%c IS_SAME_OBJECT obj2', obj2);
-            console.log('%c IS_SAME_OBJECT JSON.stringify(obj1)', JSON.stringify(obj1));
-            console.log('%c IS_SAME_OBJECT JSON.stringify(obj2)', JSON.stringify(obj2));
             if (!obj2.hasOwnProperty(key) || (!obj2[key] && !!obj1[key]) || (!!obj2[key] && !obj1[key])) {
-                console.log('%c IS_SAME_OBJECT FALSE1');
                 return false;
             }
             if (Array.isArray(obj1[key])) {
                 if (!this.isSameObject(obj1[key], obj2[key])) {
-                    console.log('%c IS_SAME_OBJECT FALSE2');
                     return false;
                 }
             } else {
                 if (typeof obj1[key] === 'object') {
-                    console.log('%c IS_SAME_OBJECT obj1[key] === \'object\' obj1', obj1[key]);
-                    console.log('%c IS_SAME_OBJECT obj1[key] === \'object\' obj2', obj2[key]);
                     if (!this.isSameObject(obj1[key], obj2[key])) {
-                        console.log('%c IS_SAME_OBJECT FALSE3');
                         return false;
                     }
                 } else {
                     if (obj1[key] && obj2[key] && obj1[key].toString() !== obj2[key].toString()) {
-                        console.log('%c IS_SAME_OBJECT FALSE4');
                         return false;
                     }
                 }
             }
         }
     }
-    console.log('%c IS_SAME_OBJECT TRUE');
     return true;
 }

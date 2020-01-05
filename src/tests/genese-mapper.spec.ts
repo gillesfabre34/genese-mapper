@@ -374,7 +374,6 @@ describe('GENESE MAPPER geneseMapper', () => {
                 expect(isSameObject(geneseMapper.map({a: {b: 2}}), {a: {b: ['']}})).toBeTruthy();
             });
             it('{a: 3} => {a: {b: [""]}}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a: 3})));
                 expect(isSameObject(geneseMapper.map({a: 3}), {a: {b: ['']}})).toBeTruthy();
             });
             it('{a: {b: ["5"]}} => {a: {b: ["5"]}}', () => {
@@ -473,15 +472,13 @@ describe('GENESE MAPPER geneseMapper', () => {
             const geneseMapper = new GeneseMapper<TestClass>(TestClass);
 
             it('{a: {fr: {b: "2"}}} => {a: {fr: {b: "2"}}}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a:  {b: '2'}})));
                 expect(isSameObject(geneseMapper.map({a: {fr: {b: '2'}}}), {a: {fr: {b: '2'}}})).toBeTruthy();
             });
             it('{a: {fr: {b: "2"}, en: {b: "2"}}} => {a: {fr: {b: "2"}, en: {b: "2"}}}', () => {
                 expect(isSameObject(geneseMapper.map({a: {fr: {b: '2'}}, en: {b: '2'}}),{a: {fr: {b: '2'}}, en: {b: '2'}})).toBeTruthy();
             });
-            it('{{a: {c: "2"}}} => {a: {fr: {b: "2"}}}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a:  {c: '2'}})));
-                expect(isSameObject(geneseMapper.map({a:  {c: '2'}}), {a: {}})).toBeTruthy();
+            it('{{a: {c: "2"}}} => {a: {}}', () => {
+                expect(isSameObject(geneseMapper.map({a:  {c: '2'}}), {a: {c: {b: ''}}})).toBeTruthy();
             });
         });
 
@@ -510,24 +507,19 @@ describe('GENESE MAPPER geneseMapper', () => {
                 expect(isSameObject(geneseMapper.map({a:  {b: null}}), {a: {b: null}})).toBeTruthy();
             });
             it('{a: {b: undefined}} => {a: {b: ""}]}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a:  {b: ''}})));
                 expect(isSameObject(geneseMapper.map({a:  {b: ''}}), {a: {b: ''}})).toBeTruthy();
             });
             it('{a: {}} => {a: {b: ""}]}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a:  {b: ''}})));
                 expect(isSameObject(geneseMapper.map({a:  {b: ''}}), {a: {b: ''}})).toBeTruthy();
             });
             it('{a: {b: {c: 2}}} => {a: {b: ""}]}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a:  {b: ''}})));
                 expect(isSameObject(geneseMapper.map({a:  {b: ''}}), {a: {b: ''}})).toBeTruthy();
             });
             it('{a: null} => {a: null]}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a:  null})));
                 expect(isSameObject(geneseMapper.map({a:  null}), {a: null})).toBeTruthy();
             });
             it('{a: undefined} => {a: {b: ""}]}', () => {
-                console.log('MAP :', JSON.stringify(geneseMapper.map({a:  undefined})));
-                expect(isSameObject(JSON.parse(JSON.stringify(geneseMapper.map({a:  undefined}))), {a: {}})).toBeTruthy();
+                expect(isSameObject(geneseMapper.map({a:  undefined}), {a: {}})).toBeTruthy();
             });
         });
     });

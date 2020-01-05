@@ -152,25 +152,13 @@ export class GeneseMapper<T> {
         } else {
             let cloneTarget = Object.assign({}, target);
             for (const key of Object.keys(target)) {
-                // console.log('%c _mapNotPrimitive target', 'font-weight: bold; color: black;', target);
-                // console.log('%c _mapNotPrimitive source', 'font-weight: bold; color: black;', source);
-                // console.log('%c _mapNotPrimitive key', 'font-weight: bold; color: black;', key);
-                // console.log('%c _mapNotPrimitive target[key]', 'font-weight: bold; color: black;', target[key]);
                 if (key === 'gnIndexableType') {
-                    // console.log('%c INDEXABLE_TYPE _mapNotPrimitive target', 'font-weight: bold; color: orange;', target);
-                    // console.log('%c INDEXABLE_TYPE _mapNotPrimitive source', 'font-weight: bold; color: orange;', source);
                     cloneTarget = this._mapIndexableType(target as unknown as IndexableType, source);
-                    // console.log('%c _mapNotPrimitive cloneTarget', 'font-weight: bold; color: black;', cloneTarget);
-                    // cloneTarget = this._mapIndexableType(target[key] as unknown as IndexableType, source);
                 } else {
                     if (target[key] !== undefined) {
-                        // console.log('%c _mapNotPrimitive cloneTarget', 'font-weight: bold; color: red;', cloneTarget);
-                        // console.log('%c _mapNotPrimitive source', 'font-weight: bold; color: red;', source);
-                        // console.log('%c _mapNotPrimitive source[key]', 'font-weight: bold; color: red;', source[key]);
                         if (source[key] === null) {
                             cloneTarget[key] = null;
                         } else if (source[key] === undefined) {
-                            // cloneTarget[key] = source;
                             cloneTarget[key] = this._purge(target[key]);
                         } else {
                             if (Array.isArray(target[key])) {
@@ -207,7 +195,14 @@ export class GeneseMapper<T> {
      *      }
      *  };
      * For each key of gnIndexableType field, this method returns the corresponding mapped object with the target model
-     * For example, this method can return something like :
+     * For example, this method will receive an object like this :
+     *
+     * gnIndexableType: {
+     *      country: ''
+     * }
+     *
+     * and will return something like this :
+     *
      * {
      *     fr: {
      *         country: 'France'
@@ -219,8 +214,6 @@ export class GeneseMapper<T> {
      * Caution: param target should be defined
      */
     _mapIndexableType(target: any, source: any): any {
-        // console.log('%c _mapIndexableType target', 'font-weight: bold; color: green;', target);
-        // console.log('%c _mapIndexableType source', 'font-weight: bold; color: green;', source);
         if (target === undefined || target.gnIndexableType === undefined) {
             console.warn('Impossible to map indexable types with undefined target.');
             return undefined;
@@ -231,11 +224,9 @@ export class GeneseMapper<T> {
         if (source === null) {
             return null;
         }
-        const zzz = Object.assign({}, this._mapIndexableTypeObject(target.gnIndexableType, source));
-        // console.log('%c _mapIndexableType zzz', 'font-weight: bold; color: fuchsia;', zzz);
         return Array.isArray(target.gnIndexableType) && target.gnIndexableType.length > 0
             ? this._mapIndexableTypeArray(target.gnIndexableType[0], source)
-            : zzz;
+            : Object.assign({}, this._mapIndexableTypeObject(target.gnIndexableType, source));
     }
 
 
@@ -252,12 +243,9 @@ export class GeneseMapper<T> {
 
     _mapIndexableTypeObject(target: any, source: any): any {
         const mappedObject: any = {};
-        // console.log('%c _mapIndexableTypeObject target', 'font-weight: bold; color: blue;', target);
-        // console.log('%c _mapIndexableTypeObject source', 'font-weight: bold; color: blue;', source);
         for (const key of Object.keys(source)) {
-            Object.assign(mappedObject, { [key]: this._diveMap(target, source[key])});
+            Object.assign(mappedObject, {[key]: this._diveMap(target, source[key])});
         }
-        // console.log('%c _mapIndexableTypeObject mappedObject', 'font-weight: bold; color: blue;', mappedObject);
         return mappedObject;
     }
 

@@ -46,20 +46,25 @@ export class GeneseMapper<T> {
 
 
     /**
-     * Returns array of mapped results
+     * Receives an array of elements to map (with type T) and returns the array of mapped results (with T type)
      */
-    public arrayMap(data: any[]): T[] {
+    public arrayMap(data: any[], tConstructor: TConstructor<any> = this.tConstructor): T[] {
+        console.log('arrayMap : JSON.stringify(data)', JSON.stringify(data));
+        console.log('arrayMap : tConstructor', tConstructor);
+        if (data === null) {
+            return null;
+        }
         if (!Array.isArray(data)) {
             return [];
         }
         const results: any[] = [];
-        if (PRIMITIVES.includes(this.tConstructor.name)) {
+        if (PRIMITIVES.includes(tConstructor.name)) {
             data.forEach(e => {
-                if (typeof e === this.tConstructor.name.toLowerCase()) {
+                if (typeof e === tConstructor.name.toLowerCase()) {
                     results.push(e);
-                } else if (this.tConstructor.name === 'String' && typeof e === 'number') {
+                } else if (tConstructor.name === 'String' && typeof e === 'number') {
                     results.push(e.toString());
-                } else if (this.tConstructor.name === 'Number' && typeof e === 'string' && !isNaN(Number(e))) {
+                } else if (tConstructor.name === 'Number' && typeof e === 'string' && !isNaN(Number(e))) {
                     results.push(+e);
                 } else if (e === null) {
                     results.push(null);
@@ -70,6 +75,7 @@ export class GeneseMapper<T> {
                 results.push(this.map(e));
             });
         }
+        console.log('arrayMap : JSON.stringify(results)', JSON.stringify(results));
         return results;
     }
 
@@ -251,17 +257,38 @@ export class GeneseMapper<T> {
 
 
     /**
-     * Remove specific genese properties
+     * Map array of objects
      */
-    _mapArrayOfObjects(target: {[key: string]: any}[], source: {[key: string]: any}[]): {[key: string]: any}[] {
-        if (!Array.isArray(target) || target.length === 0 || !Array.isArray(source)) {
+    _mapArrayOfObjects(target: any[], source: any[]): any[] {
+    // _mapArrayOfObjects(target: {[key: string]: any}[], source: {[key: string]: any}[]): {[key: string]: any}[] {
+        console.log('_mapArrayOfObjects : JSON.stringify(target)', JSON.stringify(target));
+        console.log('_mapArrayOfObjects : JSON.stringify(source)', JSON.stringify(source));
+        if (source === null) {
+            return null;
+        }
+        if (source === undefined || !Array.isArray(source)) {
+            return target;
+        }
+        if (!Array.isArray(target) || target.length === 0) {
             console.warn('Impossible to map array of objects with undefined or empty array');
             return undefined;
         }
         const arrayOfObjects: any[] = [];
         const model = clone(target[0]);
         for (const element of source) {
-            arrayOfObjects.push(this._diveMap(model, element));
+            console.log('_mapArrayOfObjects ELEMENT : JSON.stringify(element)', JSON.stringify(element));
+            let mappedElement: any;
+            if (Array.isArray(model)) {
+                mappedElement = this._mapArrayOfObjects(model, element);
+                console.log('_mapArrayOfObjects YYY : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
+                // const yyy = this.arrayMap(element);
+                // console.log('_mapArrayOfObjects YYY : JSON.stringify(yyy)', JSON.stringify(yyy));
+            } else {
+                mappedElement = this._diveMap(model, element);
+                console.log('_mapArrayOfObjects ZZZ : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
+            }
+            arrayOfObjects.push(mappedElement);
+            console.log('_mapArrayOfObjects ARRAY_OF_OBJECTS : JSON.stringify(arrayOfObjects)', JSON.stringify(arrayOfObjects));
         }
         return arrayOfObjects;
     }

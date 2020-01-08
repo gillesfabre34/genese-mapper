@@ -555,7 +555,7 @@ describe('GENESE MAPPER geneseMapper', () => {
                 expect(isSameObject(geneseMapper.arrayMap([null]), [null])).toBeTruthy();
             });
             it('null => []', () => {
-                expect(isSameObject(geneseMapper.arrayMap(null), [])).toBeTruthy();
+                expect(isSameObject(geneseMapper.arrayMap(null), null)).toBeTruthy();
             });
             it('undefined => []', () => {
                 expect(isSameObject(geneseMapper.arrayMap(undefined), [])).toBeTruthy();
@@ -588,7 +588,7 @@ describe('GENESE MAPPER geneseMapper', () => {
                 expect(isSameObject(geneseMapper.arrayMap([null]), [null])).toBeTruthy();
             });
             it('null => []', () => {
-                expect(isSameObject(geneseMapper.arrayMap(null), [])).toBeTruthy();
+                expect(isSameObject(geneseMapper.arrayMap(null), null)).toBeTruthy();
             });
             it('undefined => []', () => {
                 expect(isSameObject(geneseMapper.arrayMap(undefined), [])).toBeTruthy();
@@ -624,7 +624,7 @@ describe('GENESE MAPPER geneseMapper', () => {
                 expect(isSameObject(geneseMapper.arrayMap([null]), [null])).toBeTruthy();
             });
             it('null => []', () => {
-                expect(isSameObject(geneseMapper.arrayMap(null), [])).toBeTruthy();
+                expect(isSameObject(geneseMapper.arrayMap(null), null)).toBeTruthy();
             });
             it('undefined => []', () => {
                 expect(isSameObject(geneseMapper.arrayMap(undefined), [])).toBeTruthy();

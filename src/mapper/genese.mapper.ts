@@ -49,8 +49,6 @@ export class GeneseMapper<T> {
      * Receives an array of elements to map (with type T) and returns the array of mapped results (with T type)
      */
     public arrayMap(data: any[], tConstructor: TConstructor<any> = this.tConstructor): T[] {
-        console.log('arrayMap : JSON.stringify(data)', JSON.stringify(data));
-        console.log('arrayMap : tConstructor', tConstructor);
         if (data === null) {
             return null;
         }
@@ -75,7 +73,6 @@ export class GeneseMapper<T> {
                 results.push(this.map(e));
             });
         }
-        console.log('arrayMap : JSON.stringify(results)', JSON.stringify(results));
         return results;
     }
 
@@ -260,14 +257,10 @@ export class GeneseMapper<T> {
      * Map array of objects
      */
     _mapArray(target: any[], source: any[]): any[] {
-        console.log('_mapArray : JSON.stringify(target)', JSON.stringify(target));
-        console.log('_mapArray : JSON.stringify(source)', JSON.stringify(source));
         if (source === null) {
             return null;
         }
         if (source === undefined || !Array.isArray(source) || (Array.isArray(target) && !Array.isArray(source))) {
-            console.log('_mapArray : Array.isArray(source)', Array.isArray(source));
-            console.log('_mapArray : Array.isArray(target)', Array.isArray(target));
             return target;
         }
         if (!Array.isArray(target) || target.length === 0) {
@@ -277,20 +270,15 @@ export class GeneseMapper<T> {
         const arrayOfObjects: any[] = [];
         const model = clone(target[0]);
         for (const element of source) {
-            console.log('_mapArray ELEMENT : JSON.stringify(element)', JSON.stringify(element));
             let mappedElement: any;
             if (Array.isArray(model) && Array.isArray(element)) {
                 mappedElement = this._mapArray(model, element);
-                console.log('_mapArray YYY : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
             } else if (Array.isArray(model) && !Array.isArray(element) && !!element) {
-                console.log('_mapArray UUU : JSON.stringify(element)', JSON.stringify(element));
                 return target;
             } else {
                 mappedElement = this._diveMap(model, element);
-                console.log('_mapArray ZZZ : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
             }
             arrayOfObjects.push(mappedElement);
-            console.log('_mapArray ARRAY_OF_OBJECTS : JSON.stringify(arrayOfObjects)', JSON.stringify(arrayOfObjects));
         }
         return arrayOfObjects;
     }

@@ -169,7 +169,7 @@ export class GeneseMapper<T> {
                         } else {
                             if (Array.isArray(target[key])) {
                                 cloneTarget[key] = Array.isArray(source[key])
-                                    ? this._mapArrayOfObjects(target[key], source[key])
+                                    ? this._mapArray(target[key], source[key])
                                     : cloneTarget[key];
                             } else {
                                 if (this._areStringOrNumber(target[key], source[key])) {
@@ -259,14 +259,15 @@ export class GeneseMapper<T> {
     /**
      * Map array of objects
      */
-    _mapArrayOfObjects(target: any[], source: any[]): any[] {
-    // _mapArrayOfObjects(target: {[key: string]: any}[], source: {[key: string]: any}[]): {[key: string]: any}[] {
-        console.log('_mapArrayOfObjects : JSON.stringify(target)', JSON.stringify(target));
-        console.log('_mapArrayOfObjects : JSON.stringify(source)', JSON.stringify(source));
+    _mapArray(target: any[], source: any[]): any[] {
+        console.log('_mapArray : JSON.stringify(target)', JSON.stringify(target));
+        console.log('_mapArray : JSON.stringify(source)', JSON.stringify(source));
         if (source === null) {
             return null;
         }
-        if (source === undefined || !Array.isArray(source)) {
+        if (source === undefined || !Array.isArray(source) || (Array.isArray(target) && !Array.isArray(source))) {
+            console.log('_mapArray : Array.isArray(source)', Array.isArray(source));
+            console.log('_mapArray : Array.isArray(target)', Array.isArray(target));
             return target;
         }
         if (!Array.isArray(target) || target.length === 0) {
@@ -276,19 +277,20 @@ export class GeneseMapper<T> {
         const arrayOfObjects: any[] = [];
         const model = clone(target[0]);
         for (const element of source) {
-            console.log('_mapArrayOfObjects ELEMENT : JSON.stringify(element)', JSON.stringify(element));
+            console.log('_mapArray ELEMENT : JSON.stringify(element)', JSON.stringify(element));
             let mappedElement: any;
-            if (Array.isArray(model)) {
-                mappedElement = this._mapArrayOfObjects(model, element);
-                console.log('_mapArrayOfObjects YYY : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
-                // const yyy = this.arrayMap(element);
-                // console.log('_mapArrayOfObjects YYY : JSON.stringify(yyy)', JSON.stringify(yyy));
+            if (Array.isArray(model) && Array.isArray(element)) {
+                mappedElement = this._mapArray(model, element);
+                console.log('_mapArray YYY : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
+            } else if (Array.isArray(model) && !Array.isArray(element) && !!element) {
+                console.log('_mapArray UUU : JSON.stringify(element)', JSON.stringify(element));
+                return target;
             } else {
                 mappedElement = this._diveMap(model, element);
-                console.log('_mapArrayOfObjects ZZZ : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
+                console.log('_mapArray ZZZ : JSON.stringify(mappedElement)', JSON.stringify(mappedElement));
             }
             arrayOfObjects.push(mappedElement);
-            console.log('_mapArrayOfObjects ARRAY_OF_OBJECTS : JSON.stringify(arrayOfObjects)', JSON.stringify(arrayOfObjects));
+            console.log('_mapArray ARRAY_OF_OBJECTS : JSON.stringify(arrayOfObjects)', JSON.stringify(arrayOfObjects));
         }
         return arrayOfObjects;
     }
